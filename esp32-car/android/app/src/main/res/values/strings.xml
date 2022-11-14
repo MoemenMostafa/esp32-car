@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">esp32-car</string>
+    <string name="title_activity_main">esp32-car</string>
+    <string name="package_name">com.moamen.esp32car</string>
+    <string name="custom_url_scheme">com.moamen.esp32car</string>
+</resources>

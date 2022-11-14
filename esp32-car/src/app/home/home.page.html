@@ -1,0 +1,68 @@
+<ion-content [fullscreen]="true">
+  <!-- <ion-grid id="container">
+    <ion-row>
+      <ion-col>
+        <button (mousedown)="forward($event)" (mouseup)="stop()">up</button>
+        <div></div>
+        <ion-button size="large" expand="block" (click)="forward($event)">
+          <ion-icon slot="icon-only" name="chevron-up-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button size="large" expand="block">
+          <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button size="large" expand="block">
+          <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button size="large" expand="block" (click)="stop()">
+          <ion-icon slot="icon-only" name="chevron-down-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid> -->
+
+  <div class="container noselect">
+    <div class="zone">
+        <ngx-joystick #staticJoystic
+                        [options]="staticOptions"
+                        (start)="onStartStatic($event)"
+                        (end)="onEndStatic($event)"
+                        (move)="onMoveStatic($event)"></ngx-joystick>
+    </div>
+  </div>
+  <div *ngIf="staticOutputData" class="zone-absolute">
+      <div style="float: right;">
+          <div>xPos: {{ staticOutputData.position.x | number:'3.2-2'}}</div>
+          <div>yPos: {{ staticOutputData.position.y | number:'3.2-2'}}</div>
+          <div>dirEvent: {{ directionStatic }}</div>
+          <div>interact: {{ interactingStatic }}</div>
+      </div>
+      <div>frontXPos: {{ staticOutputData.instance.frontPosition.x | number:'2.5-5'}}</div>
+      <div>frontYPos: {{ staticOutputData.instance.frontPosition.y | number:'2.5-5'}}</div>
+      <div>force: {{ staticOutputData.force | number:'1.5-5'}}</div>
+      <div>angle-deg: {{ staticOutputData.angle.degree | number:'3.5-5'}}</div>
+      <div>angle-rad: {{ staticOutputData.angle.radian }}</div>
+      <div>direction: {{ staticOutputData.direction ? staticOutputData.direction.angle : ''}}</div>
+      <div>distance: {{ staticOutputData.distance | number }}</div>
+      <div>speed: {{ speed }}</div>
+      <div>directionA: {{ direction[0] }}</div>
+      <div>directionB: {{ direction[1] }}</div>
+      <div>dutyCycleA: {{ dutyCycles[0] }}</div>
+      <div>dutyCycleB: {{ dutyCycles[1] }}</div>
+  </div>
+</ion-content>
+<ion-footer>
+  <ion-col>
+    <ion-button *ngIf="!isConnected" expand="block" (click)="connect()">Connect</ion-button>
+    <ion-button *ngIf="isConnected" expand="block" color="success" disabled="true">Connected</ion-button>
+  </ion-col>
+</ion-footer>
