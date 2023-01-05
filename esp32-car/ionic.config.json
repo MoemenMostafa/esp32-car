@@ -1,5 +1,7 @@
 {
   "name": "esp32-car",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }

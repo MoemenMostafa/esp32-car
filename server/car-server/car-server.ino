@@ -2,12 +2,13 @@
 #ifdef ESP32
 #include <WiFi.h>
 #include <AsyncTCP.h>
+#include <analogWrite.h>
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
 #include <ESPAsyncTCP.h>
 #endif
 #include <ESPAsyncWebServer.h>
-#include <analogWrite.h>
+
 
 #define MOTOR_A 1
 #define MOTOR_B 2
@@ -15,30 +16,29 @@
 #define STOP 0
 #define START 1
 
+int ledBlink = false;
+int ledOn = false;
+
 // Motor A
-int motorAIn1 = 27;
-int motorAIn2 = 26;
-// int enable1Pin = 14;
+int motorAIn1 = 14; // D5
+int motorAIn2 = 12; // D6
 
 // Motor B
-int motorBIn3 = 16;
-int motorBIn4 = 17;
-// int enable2Pin = 4;
+int motorBIn3 = 13; // D7
+int motorBIn4 = 15; // D8
+
+// LED pin
+int ledPin = 16; // D0
 
 // Setting PWM properties
 const int freq = 30000;
-const int pwmChannelIn1 = 1;
-const int pwmChannelIn2 = 2;
-const int pwmChannelIn3 = 3;
-const int pwmChannelIn4 = 4;
-const int resolution = 8;
+
 
 const char* ssidAP     = "MyDevelopmentBoard Car";
 const char* passwordAP = "12345678";
 
 const char* ssid     = "MagentaWLAN-F9ON";
 const char* password = "03291604044512253024";
-
 
 
 AsyncWebServer server(80);
@@ -53,22 +53,13 @@ void setup(void)
   // sets the pins as outputs:
   pinMode(motorAIn1, OUTPUT);
   pinMode(motorAIn2, OUTPUT);
-
-  // sets the pins as outputs:
   pinMode(motorBIn3, OUTPUT);
   pinMode(motorBIn4, OUTPUT);
+  pinMode(ledPin, OUTPUT);
 
-  // configure LED PWM functionalitites
-  ledcSetup(pwmChannelIn1, freq, resolution);
-  ledcSetup(pwmChannelIn2, freq, resolution);
-  ledcSetup(pwmChannelIn3, freq, resolution);
-  ledcSetup(pwmChannelIn4, freq, resolution);
+  // Set analogWrite frequency
+  analogWriteFreq(freq);
 
-  // attach the channel to the GPIO to be controlled
-  ledcAttachPin(motorAIn1, pwmChannelIn1);
-  ledcAttachPin(motorAIn2, pwmChannelIn2);
-  ledcAttachPin(motorBIn3, pwmChannelIn3);
-  ledcAttachPin(motorBIn4, pwmChannelIn4);
 
   Serial.begin(115200);
 
@@ -76,7 +67,7 @@ void setup(void)
 
   createAccessPoint();
 
-  connectToWifi();  
+  // connectToWifi();
 
   ws.onEvent(onWebSocketEvent);
   server.addHandler(&ws);
@@ -84,6 +75,9 @@ void setup(void)
   server.begin();
   Serial.println("HTTP server started");
 
+
+  // trun led on
+  analogWrite(ledPin, 255);
 }
 
 void loop()
@@ -113,41 +107,47 @@ void connectToWifi() {
 }
 
 void createAccessPoint() {
-  WiFi.softAP(ssidAP, passwordAP);
-  IPAddress IP = WiFi.softAPIP();
-  Serial.print("AP IP address: ");
-  Serial.println(IP);
+  if (!WiFi.softAPConfig(local_IP, gateway, subnet)) {
+    Serial.println("SoftAP Failed to configure");
+  };
+  if(!WiFi.softAP(ssidAP, passwordAP)){
+    Serial.println("SoftAP Failed to start");    
+  } else {
+    IPAddress IP = WiFi.softAPIP();
+    Serial.print("AP IP address: ");
+    Serial.println(IP);
+  }
 }
 
 void rotateMotorA(int direction, int dutyCycles) {
   if (direction == 1) {
     Serial.println("Moving Forward");
-    ledcWrite(pwmChannelIn1, dutyCycles);
-    ledcWrite(pwmChannelIn2, 0);
+    analogWrite(motorAIn1, dutyCycles);
+    analogWrite(motorAIn2, 0);
   } else if (direction == 2) {
     Serial.println("Moving Backward");
-    ledcWrite(pwmChannelIn1, 0);
-    ledcWrite(pwmChannelIn2, dutyCycles);
+    analogWrite(motorAIn1, 0);
+    analogWrite(motorAIn2, dutyCycles);
   } else {
     Serial.println("STOP");
-    ledcWrite(pwmChannelIn1, 0);
-    ledcWrite(pwmChannelIn2, 0);
+    analogWrite(motorAIn1, 0);
+    analogWrite(motorAIn2, 0);
   }
 }
 
 void rotateMotorB(int direction, int dutyCycles) {
   if (direction == 1) {
     Serial.println("Moving Forward");
-    ledcWrite(pwmChannelIn3, dutyCycles);
-    ledcWrite(pwmChannelIn4, 0);
+    analogWrite(motorBIn3, dutyCycles);
+    analogWrite(motorBIn4, 0);
   } else if (direction == 2) {
     Serial.println("Moving Backward");
-    ledcWrite(pwmChannelIn3, 0);
-    ledcWrite(pwmChannelIn4, dutyCycles);
+    analogWrite(motorBIn3, 0);
+    analogWrite(motorBIn4, dutyCycles);
   } else {
     Serial.println("STOP");
-    ledcWrite(pwmChannelIn3, 0);
-    ledcWrite(pwmChannelIn4, 0);
+    analogWrite(motorBIn3, 0);
+    analogWrite(motorBIn4, 0);    
   }
 }
 

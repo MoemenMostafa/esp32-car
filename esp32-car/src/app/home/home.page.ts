@@ -13,11 +13,15 @@ export class HomePage {
   isConnected = false;
   speed = [0,0];
   direction = [0,0];
-  dutyCycles = [0,0]
+  dutyCycles = [0,0];
+
+  // Set the position of the motor groups
+  motorGroupA = IMotorGroupSide.RIGHT;
+  motorGroupB = IMotorGroupSide.LEFT;
 
   // Duty Cycle constants
   dCHigh = 255; // max duty cycle
-  dCLow = 180; // min duty cycle
+  dCLow = 160; // min duty cycle
   dCRange = this.dCHigh - this.dCLow;
   move;
 
@@ -132,8 +136,13 @@ export class HomePage {
     this.dutyCycles[0] = Math.floor(this.getDutyCycles(this.speed[0]));
     this.dutyCycles[1] = Math.floor(this.getDutyCycles(this.speed[1]));
 
-    this.myWebSocket.next(parseInt(`1${this.direction[0]}${this.dutyCycles[0]}`));
-    this.myWebSocket.next(parseInt(`2${this.direction[1]}${this.dutyCycles[1]}`));
+    this.myWebSocket.next(parseInt(`${this.motorGroupA}${this.direction[0]}${this.dutyCycles[0]}`));
+    this.myWebSocket.next(parseInt(`${this.motorGroupB}${this.direction[1]}${this.dutyCycles[1]}`));
   }
 
+}
+
+enum IMotorGroupSide {
+  LEFT = '1',
+  RIGHT = '2'
 }
