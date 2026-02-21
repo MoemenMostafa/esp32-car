@@ -2,11 +2,13 @@
 
 A Wi-Fi-controlled car project using an ESP32 (or ESP8266) as the controller and a cross-platform mobile application built with Ionic and Angular.
 
-## project Overview
+## Project Overview
 
 The project consists of two main parts:
 1.  **ESP32 Firmware**: An Arduino-based sketch that sets up a WebSocket server to receive control commands and manage motor movements.
 2.  **Mobile App**: An Ionic/Angular application featuring a virtual joystick to control the car in real-time.
+
+![Mobile App Usage](docs/images/mobile_usage.png)
 
 ## Features
 
