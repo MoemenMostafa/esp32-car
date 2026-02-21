@@ -1,6 +1,8 @@
 # ESP32 Car Project
 
-![ESP32 DIY Car Hero](docs/images/hero.png)
+<p align="center">
+  <img src="docs/images/hero.png" width="400" alt="ESP32 DIY Car Hero">
+</p>
 
 A Wi-Fi-controlled car project using an ESP32 (or ESP8266) as the controller and a cross-platform mobile application built with Ionic and Angular.
 
@@ -10,8 +12,11 @@ The project consists of two main parts:
 1.  **ESP32 Firmware**: An Arduino-based sketch that sets up a WebSocket server to receive control commands and manage motor movements.
 2.  **Mobile App**: An Ionic/Angular application featuring a virtual joystick to control the car in real-time.
 
-![Mobile App Usage](docs/images/mobile_usage.png)
-*Joystick in use (Forward command)*
+<p align="center">
+  <img src="docs/images/mobile_usage.png" width="300" alt="Mobile App Usage">
+  <br>
+  <em>Joystick in use (Forward command)</em>
+</p>
 
 ## Features
 
